@@ -1,12 +1,16 @@
-from netmiko import ConnectHandler
-from typing import Iterator, Mapping, Any
+from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
+from typing import Any
+
+from netmiko import ConnectHandler
+
 
 @contextmanager
-def net_connection(params: Mapping[str, Any],
-                *,
-                use_enable: bool | None = None,) -> Iterator[ConnectHandler]:
-    
+def net_connection(
+    params: Mapping[str, Any],
+    *,
+    use_enable: bool | None = None,
+) -> Iterator[ConnectHandler]:
     conn = None
     host = params.get("host", "unknown")
 
@@ -17,13 +21,12 @@ def net_connection(params: Mapping[str, Any],
         if use_enable:
             conn.enable()
         yield conn
-    except Exception as e:
-            print(f"Unexpected error talking to {host}")
-            raise
+    except Exception:
+        print(f"Unexpected error talking to {host}")
+        raise
     finally:
-            if conn is not None:
-                try:
-                    conn.disconnect()
-                except Exception:
-                    print(f"Disconnect failed for {host}")
-
+        if conn is not None:
+            try:
+                conn.disconnect()
+            except Exception:
+                print(f"Disconnect failed for {host}")

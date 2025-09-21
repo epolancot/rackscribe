@@ -1,0 +1,19 @@
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# Helps Ruff treat these as first-party for import sorting, etc.
+src = ["src", "."]
+
+[tool.ruff.lint]
+# Start with solid, low-noise rules; you can add more later.
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+ignore = []
+# Allow auto-fixes for all enabled rules when --fix is passed.
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.per-file-ignores]
+# Re-export patterns in __init__.py often trip F401 (unused import).
+"**/__init__.py" = ["F401"]
+
+[tool.ruff.format]

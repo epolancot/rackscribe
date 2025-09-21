@@ -1,5 +1,8 @@
+from collections.abc import Mapping
+from typing import Any
+
 from .connection import net_connection
-from typing import Mapping, Any
+
 
 def send_show(
     params: Mapping[str, Any],
