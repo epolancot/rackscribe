@@ -1,11 +1,11 @@
 repos:
   # Ruff: linter + formatter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.1        # pin to a release tag
+    rev: v0.13.1
     hooks:
       - id: ruff-check
-        args: ["--fix", "--exit-non-zero-on-fix"]  # auto-fix & fail so you re-commit reviewed fixes
-        types_or: [python, pyi]                    # skip ipynb by default
+        args: ["--fix", "--exit-non-zero-on-fix"]
+        types_or: [python, pyi]
       - id: ruff-format
         types_or: [python, pyi]
 
