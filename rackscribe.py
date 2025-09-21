@@ -1,6 +1,9 @@
 import argparse
+from dotenv import load_dotenv
 
 def main() -> None:
+    load_dotenv()
+    
     parser = argparse.ArgumentParser(prog="rackscribe", description="Gather running configurations and serial numbers.")
     parser.add_argument("-r", "--running_config", action="store_true", help="Collect all running configurations.")
     parser.add_argument("-s", "--serial_numbers", action="store_true", help="Collect serial numbers.")
