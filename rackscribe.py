@@ -9,8 +9,6 @@ from src.logging import logging_setup
 
 
 def main() -> None:
-    load_dotenv()
-
     parser = argparse.ArgumentParser(
         prog="rackscribe", description="Gather running configurations and serial numbers."
     )
@@ -22,6 +20,11 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    load_dotenv()
+
+    logging_setup("INFO")
+    log = logging.getLogger("rackscribe")
+
     if args.running_config:
         device = {
             "device_type": os.getenv("DEVICE_TYPE"),
@@ -31,8 +34,6 @@ def main() -> None:
             "secret": os.getenv("SECRET"),
         }
 
-        logging_setup("INFO")
-        log = logging.getLogger("rackscribe")
         log.info("Loaded %d device(s).", 5)
 
         result = send_cmd_batch(device, ["show run", "show inventory"])
