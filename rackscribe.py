@@ -1,9 +1,11 @@
 import argparse
+import logging
 import os
 
 from dotenv import load_dotenv
 
-from src.commands import send_show
+from src.commands import send_cmd_batch
+from src.logging import logging_setup
 
 
 def main() -> None:
@@ -29,7 +31,11 @@ def main() -> None:
             "secret": os.getenv("SECRET"),
         }
 
-        result = send_show(device, "show run")
+        logging_setup("INFO")
+        log = logging.getLogger("rackscribe")
+        log.info("Loaded %d device(s).", 5)
+
+        result = send_cmd_batch(device, ["show run", "show inventory"])
         print(result)
 
     elif args.serial_numbers:
