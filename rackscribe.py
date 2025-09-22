@@ -25,7 +25,7 @@ def main() -> None:
     if args.running_config:
         device = {
             "device_type": os.getenv("DEVICE_TYPE"),
-            "host": "",  # Pending
+            "host": "192.168.1.223",  # Pending
             "username": os.getenv("USERNAME"),
             "password": os.getenv("PASSWORD"),
             "secret": os.getenv("SECRET"),
