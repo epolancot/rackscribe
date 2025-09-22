@@ -4,10 +4,26 @@ from typing import Any
 from .connection import net_connection
 
 
-def send_show(
+# Send one command
+def send_cmd(
     params: Mapping[str, Any],
     command: str,
     **kwargs: Any,
 ) -> str:
+    """Send one command."""
     with net_connection(params) as conn:
         return conn.send_command(command, **kwargs)
+
+
+# Send several commands
+def send_cmd_batch(
+    params: Mapping[str, Any],
+    commands: list[str],
+    **kwargs: Any,
+) -> dict[str, str]:
+    """Send several commands in one session."""
+    output: dict[str, str] = {}
+    with net_connection(params) as conn:
+        for cmd in commands:
+            output[cmd] = conn.send_command(cmd, **kwargs)
+    return output
