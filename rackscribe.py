@@ -29,14 +29,14 @@ def main() -> None:
     load_dotenv()
 
     logging_levels = ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+    logging_setup(logging_levels[args.log_level])
+    log = logging.getLogger("rackscribe")
 
     ip_list = load_inventory(args.inventory)["devices"]
+    log.info("Loaded %d device(s).", len(ip_list))
 
     # TESTING
     if args.running_config:
-        logging_setup(logging_levels[args.log_level])
-        log = logging.getLogger("rackscribe")
-        log.info("Loaded %d device(s).", len(ip_list))
         device_number = 0
 
         for ip in ip_list:
