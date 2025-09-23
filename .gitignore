@@ -13,6 +13,10 @@ devices.yml
 inventory/*.yml
 !examples/devices.yml    # keep the example inventory tracked
 
+# Local outputs
+output/*.cfg
+output/*.xlsx
+
 # Jupyter
 .ipynb_checkpoints/
 

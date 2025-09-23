@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 
 from src.commands import send_cmd
 from src.inventory import load_device_attr, load_inventory
-from src.logging import logging_setup
+from src.logging_setup import logging_setup
+from src.output import create_config_file
 
 
 def main() -> None:
@@ -36,12 +37,14 @@ def main() -> None:
         logging_setup(logging_levels[args.log_level])
         log = logging.getLogger("rackscribe")
         log.info("Loaded %d device(s).", len(ip_list))
+        device_number = 0
 
         for ip in ip_list:
-            log.info("Connecting to %d.", ip)
+            device_number += 1
+            log.info(f"Connecting to {ip}")
             device = load_device_attr(ip)
-            result = send_cmd(device, "show running-config")
-            print(result)
+            output = send_cmd(device, "show running-config")
+            create_config_file(f"{device_number}. config", output)
 
     elif args.serial_numbers:
         print("Serial numbers")

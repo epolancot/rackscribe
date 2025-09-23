@@ -15,7 +15,7 @@ def send_cmd(
         return conn.send_command(command, **kwargs)
 
 
-# Send several commands
+# Send several commands (for future use)
 def send_cmd_batch(
     params: Mapping[str, Any],
     commands: list[str],
