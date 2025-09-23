@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from typing import Any
@@ -14,6 +15,8 @@ def net_connection(
     conn = None
     host = params.get("host", "unknown")
 
+    log = logging.getLogger("rackscribe")
+
     try:
         conn = ConnectHandler(**params)
         if use_enable is None:
@@ -22,11 +25,11 @@ def net_connection(
             conn.enable()
         yield conn
     except Exception:
-        print(f"Unexpected error talking to {host}")
+        log.info("Unexpected error talking to %d.", host)
         raise
     finally:
         if conn is not None:
             try:
                 conn.disconnect()
             except Exception:
-                print(f"Disconnect failed for {host}")
+                log.info("Disconnect failed for %d.", host)
