@@ -11,6 +11,7 @@ def send_cmd(
     **kwargs: Any,
 ) -> str:
     """Send one command."""
+
     with net_connection(params) as conn:
         return conn.send_command(command, **kwargs)
 

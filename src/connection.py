@@ -26,7 +26,7 @@ def net_connection(
         yield conn
     except Exception:
         log.info(f"Unexpected error talking to {host}.")
-        raise
+
     finally:
         if conn is not None:
             try:

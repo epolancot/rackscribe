@@ -42,14 +42,17 @@ def main() -> None:
 
         for ip in ip_list:
             device_number += 1
-            if check_ip_address(ip):
-                log.info(f"Connecting to {ip}")
-                device = load_device_attr(ip)
-                hostname = get_hostname(device)
-                output = send_cmd(device, "show running-config")
-                create_config_file(f"{device_number}. {hostname}", output)
-            else:
-                log.info(f"Invalid IP address: '{ip}'")
+            try:
+                if check_ip_address(ip):
+                    log.info(f"Connecting to {ip}")
+                    device = load_device_attr(ip)
+                    hostname = get_hostname(device)
+                    output = send_cmd(device, "show running-config")
+                    create_config_file(f"{device_number}. {hostname}", output)
+                else:
+                    log.info(f"Invalid IP address: '{ip}'")
+            except Exception:
+                log.info(f"Error while trying to connect to {ip}: ")
 
     elif args.serial_numbers:
         print("Serial numbers")
