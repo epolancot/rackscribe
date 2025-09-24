@@ -9,9 +9,8 @@ logs/
 *.log
 
 # Local inventories
-devices.yml
-inventory/*.yml
-!examples/devices.yml    # keep the example inventory tracked
+inventory/*.yaml
+!examples/devices.yml
 
 # Local outputs
 output/*.cfg
