@@ -1,13 +1,18 @@
+import logging
 import os
 
 import yaml
 
 
 def load_inventory(path: str) -> dict:
-    with open(path, encoding="utf-8") as f:
-        devices = yaml.safe_load(f)
+    log = logging.getLogger("rackscribe")
+    try:
+        with open(path, encoding="utf-8") as f:
+            devices = yaml.safe_load(f)
 
-        return devices
+            return devices
+    except Exception as e:
+        log.info(f"Error loading inventory file.\n '{e}'.")
 
 
 def load_device_attr(ip: str) -> dict:

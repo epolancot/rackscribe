@@ -7,6 +7,7 @@ from src.commands import send_cmd
 from src.inventory import load_device_attr, load_inventory
 from src.logging_setup import logging_setup
 from src.output import create_config_file
+from src.sanitize import check_ip_address
 
 
 def main() -> None:
@@ -41,10 +42,13 @@ def main() -> None:
 
         for ip in ip_list:
             device_number += 1
-            log.info(f"Connecting to {ip}")
-            device = load_device_attr(ip)
-            output = send_cmd(device, "show running-config")
-            create_config_file(f"{device_number}. config", output)
+            if check_ip_address(ip):
+                log.info(f"Connecting to {ip}")
+                device = load_device_attr(ip)
+                output = send_cmd(device, "show running-config")
+                create_config_file(f"{device_number}. config", output)
+            else:
+                log.info(f"Invalid IP address: '{ip}'")
 
     elif args.serial_numbers:
         print("Serial numbers")
