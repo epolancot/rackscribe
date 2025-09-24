@@ -22,7 +22,7 @@ def main() -> None:
     )
     parser.add_argument("-l", "--log_level", type=int, default=3, help="Logging level.")
     parser.add_argument(
-        "-i", "--inventory", type=str, default="inventory/lab.yml", help="Inventory yml file path."
+        "-i", "--inventory", type=str, default="inventory/lab.yaml", help="Inventory yml file path."
     )
 
     args = parser.parse_args()
