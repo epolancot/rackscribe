@@ -3,7 +3,7 @@ import logging
 
 from dotenv import load_dotenv
 
-from src.commands import send_cmd
+from src.commands import get_hostname, send_cmd
 from src.inventory import load_device_attr, load_inventory
 from src.logging_setup import logging_setup
 from src.output import create_config_file
@@ -45,8 +45,9 @@ def main() -> None:
             if check_ip_address(ip):
                 log.info(f"Connecting to {ip}")
                 device = load_device_attr(ip)
+                hostname = get_hostname(device)
                 output = send_cmd(device, "show running-config")
-                create_config_file(f"{device_number}. config", output)
+                create_config_file(f"{device_number}. {hostname}", output)
             else:
                 log.info(f"Invalid IP address: '{ip}'")
 

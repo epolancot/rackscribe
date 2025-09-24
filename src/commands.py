@@ -27,3 +27,10 @@ def send_cmd_batch(
         for cmd in commands:
             output[cmd] = conn.send_command(cmd, **kwargs)
     return output
+
+
+def get_hostname(params: Mapping[str, Any]) -> str:
+    with net_connection(params) as conn:
+        prompt = conn.find_prompt()
+        hostname = prompt[:-1]
+        return hostname
