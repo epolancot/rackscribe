@@ -54,7 +54,7 @@ def main() -> None:
                     else:
                         log.info(f"Invalid IP address: '{ip}'")
                 except Exception:
-                    log.info(f"Error while trying to connect to {ip}: ")
+                    log.error(f"Error while trying to connect to {ip}: ")
 
         elif args.serial_numbers:
             for ip in ip_list:
@@ -73,7 +73,7 @@ def main() -> None:
         else:
             print("Use 'rackscribe --help' to display flag options.")
     else:
-        log.info(f"Error loading IP address list. Check '{args.inventory}' ")
+        log.error(f"Error loading IP address list. Check '{args.inventory}' ")
     # -----
 
 

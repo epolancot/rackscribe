@@ -15,9 +15,9 @@ def load_inventory(path: str) -> list:
 
             return inventory
     except TypeError as e:
-        log.info(f"Error loading inventory file.\n '{e}'.")
+        log.error(f"Error loading inventory file.\n '{e}'.")
     except FileNotFoundError:
-        log.info(f"Inventory file not found: '{path}'")
+        log.error(f"Inventory file not found: '{path}'")
 
 
 def load_device_attr(ip: str) -> dict:

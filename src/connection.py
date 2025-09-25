@@ -25,11 +25,11 @@ def net_connection(
             conn.enable()
         yield conn
     except Exception:
-        log.info(f"Unexpected error talking to {host}.")
+        log.error(f"Unexpected error talking to {host}.")
 
     finally:
         if conn is not None:
             try:
                 conn.disconnect()
             except Exception:
-                log.info(f"Disconnect failed for {host}.")
+                log.error(f"Disconnect failed for {host}.")
