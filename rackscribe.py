@@ -33,26 +33,31 @@ def main() -> None:
     logging_setup(logging_levels[args.log_level])
     log = logging.getLogger("rackscribe")
 
-    ip_list = load_inventory(args.inventory)["devices"]
-    log.info("Loaded %d device(s).", len(ip_list))
+    ip_list = load_inventory(args.inventory)
+    print(ip_list)
 
     # TESTING
     if args.running_config:
         device_number = 0
 
-        for ip in ip_list:
-            device_number += 1
-            try:
-                if check_ip_address(ip):
-                    log.info(f"Connecting to {ip}")
-                    device = load_device_attr(ip)
-                    hostname = get_hostname(device)
-                    output = send_cmd(device, "show running-config")
-                    create_config_file(f"{device_number}. {hostname}", output)
-                else:
-                    log.info(f"Invalid IP address: '{ip}'")
-            except Exception:
-                log.info(f"Error while trying to connect to {ip}: ")
+        if ip_list:
+            log.info("Loaded %d device(s).", len(ip_list))
+
+            for ip in ip_list:
+                device_number += 1
+                try:
+                    if check_ip_address(ip):
+                        log.info(f"Connecting to {ip}")
+                        device = load_device_attr(ip)
+                        hostname = get_hostname(device)
+                        output = send_cmd(device, "show running-config")
+                        create_config_file(f"{device_number}. {hostname}", output)
+                    else:
+                        log.info(f"Invalid IP address: '{ip}'")
+                except Exception:
+                    log.info(f"Error while trying to connect to {ip}: ")
+        else:
+            log.info(f"Error loading IP address list. Check '{args.inventory}' ")
 
     elif args.serial_numbers:
         print("Serial numbers")
