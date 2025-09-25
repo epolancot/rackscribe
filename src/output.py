@@ -14,7 +14,10 @@ def create_config_file(hostname: str, show_run_output: str) -> str:
         log.error(f"Error while creating configuration file: {e}")
 
 
-def process_inventory_output(hostname: str, show_inventory_output: dict[int, str]) -> str:
-    print(show_inventory_output)
-    for key in show_inventory_output:
-        print(show_inventory_output[key])
+def process_inventory_output(hostname: str, show_inventory_output: str) -> list[str]:
+    device_inventory = show_inventory_output.split("\n")
+
+    for item in device_inventory:
+        if len(item) > 1:
+            field = item.split(",")
+            print(field)

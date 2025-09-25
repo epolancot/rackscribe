@@ -3,7 +3,7 @@ import logging
 
 from dotenv import load_dotenv
 
-from src.commands import get_hostname, send_cmd, send_cmd_batch
+from src.commands import get_hostname, send_cmd
 from src.inventory import load_device_attr, load_inventory
 from src.logging_setup import logging_setup
 from src.output import create_config_file, process_inventory_output
@@ -64,11 +64,7 @@ def main() -> None:
                         log.info(f"Connecting to {ip}")
                         device = load_device_attr(ip)
                         hostname = get_hostname(device)
-                        command_list = [
-                            "show inventory | include NAME",
-                            "show inventory | include PID",
-                        ]
-                        output = send_cmd_batch(device, command_list)
+                        output = send_cmd(device, "show inventory")
                         process_inventory_output(hostname, output)
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
