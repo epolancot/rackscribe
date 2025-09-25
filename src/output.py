@@ -18,3 +18,5 @@ def create_inventory_file(hostname: str, serial_numbers: str) -> str:
     log = logging.getLogger("rackscribe")
     log.info(f"Creating configuration file '{hostname}'.")
     # path = "output/serial_numbers/"
+
+    print(serial_numbers)

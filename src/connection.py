@@ -24,8 +24,8 @@ def net_connection(
         if use_enable:
             conn.enable()
         yield conn
-    except Exception:
-        log.error(f"Unexpected error talking to {host}.")
+    except Exception as e:
+        log.error(f"Error talking to {host}: {e}")
 
     finally:
         if conn is not None:

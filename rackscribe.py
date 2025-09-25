@@ -52,9 +52,9 @@ def main() -> None:
                         output = send_cmd(device, "show running-config")
                         create_config_file(f"{device_number}. {hostname}", output)
                     else:
-                        log.info(f"Invalid IP address: '{ip}'")
+                        log.error(f"Invalid IP address: '{ip}'")
                 except Exception:
-                    log.error(f"Error while trying to connect to {ip}: ")
+                    log.warning(f"No configuration saved for {ip}. See above for details.")
 
         elif args.serial_numbers:
             for ip in ip_list:
@@ -67,9 +67,9 @@ def main() -> None:
                         output = send_cmd(device, "show inventory")
                         create_inventory_file(f"{device_number}. {hostname}", output)
                     else:
-                        log.info(f"Invalid IP address: '{ip}'")
+                        log.error(f"Invalid IP address: '{ip}'")
                 except Exception:
-                    log.error(f"Error while trying to connect to {ip}: ")
+                    log.warning(f"No serial numbers saved for {ip}. See above for details.")
         else:
             print("Use 'rackscribe --help' to display flag options.")
     else:
