@@ -16,7 +16,7 @@ def send_cmd(
         return conn.send_command(command, **kwargs)
 
 
-# Send several commands (for future use)
+# Send several commands
 def send_cmd_batch(
     params: Mapping[str, Any],
     commands: list[str],
@@ -24,9 +24,11 @@ def send_cmd_batch(
 ) -> dict[str, str]:
     """Send several commands in one session."""
     output: dict[str, str] = {}
+    command_number = 0
     with net_connection(params) as conn:
         for cmd in commands:
-            output[cmd] = conn.send_command(cmd, **kwargs)
+            command_number += 1
+            output[command_number] = conn.send_command(cmd, **kwargs)
     return output
 
 
