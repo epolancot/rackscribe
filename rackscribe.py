@@ -34,13 +34,13 @@ def main() -> None:
     log = logging.getLogger("rackscribe")
 
     ip_list = load_inventory(args.inventory)
-    print(ip_list)
 
     # TESTING
-    if args.running_config:
-        device_number = 0
 
-        if ip_list:
+    if ip_list and len(ip_list) > 0:
+        if args.running_config:
+            device_number = 0
+
             log.info("Loaded %d device(s).", len(ip_list))
 
             for ip in ip_list:
@@ -56,13 +56,13 @@ def main() -> None:
                         log.info(f"Invalid IP address: '{ip}'")
                 except Exception:
                     log.info(f"Error while trying to connect to {ip}: ")
-        else:
-            log.info(f"Error loading IP address list. Check '{args.inventory}' ")
 
-    elif args.serial_numbers:
-        print("Serial numbers")
+        elif args.serial_numbers:
+            print("Serial numbers")
+        else:
+            print("Use 'rackscribe --help' to display flag options.")
     else:
-        print("Use 'rackscribe --help' to display flag options.")
+        log.info(f"Error loading IP address list. Check '{args.inventory}' ")
     # -----
 
 
