@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from src.commands import get_hostname, send_cmd
 from src.inventory import load_device_attr, load_inventory
 from src.logging_setup import logging_setup
-from src.output import create_config_file
+from src.output import create_config_file, create_inventory_file
 from src.sanitize import check_ip_address
 
 
@@ -38,11 +38,10 @@ def main() -> None:
     # TESTING
 
     if ip_list and len(ip_list) > 0:
+        log.info("Loaded %d device(s).", len(ip_list))
+        device_number = 0
+
         if args.running_config:
-            device_number = 0
-
-            log.info("Loaded %d device(s).", len(ip_list))
-
             for ip in ip_list:
                 device_number += 1
                 try:
@@ -58,7 +57,19 @@ def main() -> None:
                     log.info(f"Error while trying to connect to {ip}: ")
 
         elif args.serial_numbers:
-            print("Serial numbers")
+            for ip in ip_list:
+                device_number += 1
+                try:
+                    if check_ip_address(ip):
+                        log.info(f"Connecting to {ip}")
+                        device = load_device_attr(ip)
+                        hostname = get_hostname(device)
+                        output = send_cmd(device, "show inventory")
+                        create_inventory_file(f"{device_number}. {hostname}", output)
+                    else:
+                        log.info(f"Invalid IP address: '{ip}'")
+                except Exception:
+                    log.error(f"Error while trying to connect to {ip}: ")
         else:
             print("Use 'rackscribe --help' to display flag options.")
     else:

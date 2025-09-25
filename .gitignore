@@ -13,8 +13,8 @@ inventory/*.yaml
 !examples/devices.yml
 
 # Local outputs
-output/*.cfg
-output/*.xlsx
+output/configurations/*.*
+output/serial_numbers/*.*
 
 # Jupyter
 .ipynb_checkpoints/
