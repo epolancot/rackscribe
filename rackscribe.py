@@ -57,6 +57,7 @@ def main() -> None:
                     log.warning(f"No configuration saved for {ip}. See above for details.")
 
         elif args.serial_numbers:
+            inventory_table_rows: list[list[str]] = []
             for ip in ip_list:
                 device_number += 1
                 try:
@@ -65,7 +66,9 @@ def main() -> None:
                         device = load_device_attr(ip)
                         hostname = get_hostname(device)
                         output = send_cmd(device, "show inventory")
-                        print(process_inventory_output(hostname, output))
+                        processed_output = process_inventory_output(hostname, output)
+                        inventory_table_rows.append(processed_output)
+
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
                 except Exception:
