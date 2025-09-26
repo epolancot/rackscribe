@@ -65,7 +65,7 @@ def main() -> None:
                         device = load_device_attr(ip)
                         hostname = get_hostname(device)
                         output = send_cmd(device, "show inventory")
-                        process_inventory_output(hostname, output)
+                        print(process_inventory_output(hostname, output))
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
                 except Exception:
