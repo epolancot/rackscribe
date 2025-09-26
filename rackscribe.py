@@ -42,11 +42,12 @@ def main() -> None:
         device_number = 0
 
         if args.running_config:
+            log.info("RACKSCRIBE START - OPERATION RUNNING CONFIGURATIONS")
             for ip in ip_list:
                 device_number += 1
                 try:
                     if check_ip_address(ip):
-                        log.info(f"Connecting to {ip}")
+                        log.info(f"Connecting to {ip} - Operation Gather Running Configurations")
                         device = load_device_attr(ip)
                         hostname = get_hostname(device)
                         output = send_cmd(device, "show running-config")
@@ -57,6 +58,7 @@ def main() -> None:
                     log.warning(f"No configuration saved for {ip}. See above for details.")
 
         elif args.serial_numbers:
+            log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
             inventory_table_rows: list[list[str]] = []
             for ip in ip_list:
                 device_number += 1
