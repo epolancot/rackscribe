@@ -74,7 +74,7 @@ def main() -> None:
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
                 except Exception:
-                    log.warning(f"No serial numbers saved for {ip}. See above for details.")
+                    log.warning(f"No serial numbers saved for {ip}. See logs for details.")
         else:
             print("Use 'rackscribe --help' to display flag options.")
     else:
