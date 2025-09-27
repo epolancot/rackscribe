@@ -2,7 +2,8 @@ import logging
 import re
 
 _INVENTORY_RE = re.compile(
-    # Regex to be used in process_inventory_output()
+    # Regex used in process_inventory_output() to get the values for name, description and serial number from "show inventory" command.
+    # VID and PID fields included. Add these field if needed.
     r"""
         NAME:\s*"(?P<name>[^"]+)",\s*
         DESCR:\s*"(?P<description>[^"]+)"\s*
@@ -35,3 +36,7 @@ def process_inventory_output(hostname: str, show_inventory_output: str) -> list[
         sn = (m.group("sn") or "").strip() or "N/A"
         rows.append([hostname, name, description, sn])
     return rows
+
+
+# def create_inventory_file(filename: str) -> str:
+# TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]

@@ -5,7 +5,7 @@ import yaml
 
 
 def load_inventory(path: str) -> list:
-    """Load inventory from .yaml file and return set (unique IPs)"""
+    """Load inventory from .yaml file. Use dict.fromkeys() to filter duplicates"""
     devices = None
     log = logging.getLogger("rackscribe")
     try:

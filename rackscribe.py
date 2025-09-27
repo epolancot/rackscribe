@@ -59,7 +59,8 @@ def main() -> None:
 
         elif args.serial_numbers:
             log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
-            inventory_table_rows: list[list[str]] = []
+            # TABLE_COLUMNS = ["Hostname", "Name", "Description", "PID", "VID", "Serial Number"]
+
             for ip in ip_list:
                 device_number += 1
                 try:
@@ -68,8 +69,7 @@ def main() -> None:
                         device = load_device_attr(ip)
                         hostname = get_hostname(device)
                         output = send_cmd(device, "show inventory")
-                        processed_output = process_inventory_output(hostname, output)
-                        inventory_table_rows.append(processed_output)
+                        process_inventory_output(hostname, output)
 
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
