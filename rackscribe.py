@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from src.commands import get_hostname, send_cmd
 from src.inventory import load_device_attr, load_inventory
 from src.logging_setup import logging_setup
-from src.output import create_config_file, process_inventory_output
+from src.output import create_config_file, create_inventory_file
 from src.sanitize import check_ip_address
 
 
@@ -54,8 +54,8 @@ def main() -> None:
                         create_config_file(f"{device_number}. {hostname}", output)
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
-                except Exception:
-                    log.warning(f"No configuration saved for {ip}. See above for details.")
+                except Exception as e:
+                    log.warning(f"No configuration saved for {ip}. See above for details. {e}")
 
         elif args.serial_numbers:
             log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
@@ -67,14 +67,30 @@ def main() -> None:
                     if check_ip_address(ip):
                         log.info(f"Connecting to {ip}")
                         device = load_device_attr(ip)
-                        hostname = get_hostname(device)
-                        output = send_cmd(device, "show inventory")
-                        process_inventory_output(hostname, output)
+                        # hostname = get_hostname(device)
+                        # output = send_cmd(device, "show inventory")
+
+                        # TEST hostname/output
+                        hostname = "test_device"
+                        output = """
+
+NAME: "2851 chassis", DESCR: "2851 chassis"
+
+PID: CISCO2851         , VID: V03 , SN: FTX1043A40Y
+
+NAME: "ATM AIM 0", DESCR: "ATM AIM"
+
+PID: AIM-ATM           , VID: V01 , SN: FOC12105CBV
+
+                        """
+                        # pro = process_inventory_output(hostname, output)
+
+                        create_inventory_file("out_test")
 
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
-                except Exception:
-                    log.warning(f"No serial numbers saved for {ip}. See logs for details.")
+                except Exception as e:
+                    log.warning(f"No serial numbers saved for {ip}. See logs for details. {e}")
         else:
             print("Use 'rackscribe --help' to display flag options.")
     else:

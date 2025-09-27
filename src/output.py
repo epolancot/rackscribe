@@ -1,6 +1,8 @@
 import logging
 import re
 
+import pandas as pd
+
 _INVENTORY_RE = re.compile(
     # Regex used in process_inventory_output() to get the values for name, description and serial number from "show inventory" command.
     # VID and PID fields included. Add these field if needed.
@@ -38,5 +40,9 @@ def process_inventory_output(hostname: str, show_inventory_output: str) -> list[
     return rows
 
 
-# def create_inventory_file(filename: str) -> str:
-# TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]
+# Test write excel
+def create_inventory_file(filename: str) -> str:
+    TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]
+
+    df = pd.DataFrame([], columns=TABLE_COLUMNS)
+    df.to_excel(f"{filename}.xlsx", index=False)
