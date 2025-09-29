@@ -55,7 +55,7 @@ def main() -> None:
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
                 except Exception as e:
-                    log.warning(f"No configuration saved for {ip}. See above for details. {e}")
+                    log.warning(f"No configuration saved for {ip}. See logs for details. {e}")
 
         elif args.serial_numbers:
             log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
@@ -76,11 +76,11 @@ def main() -> None:
 
 NAME: "2851 chassis", DESCR: "2851 chassis"
 
-PID: CISCO2851         , VID: V03 , SN: FTX1043A40Y
+PID: CISCO2851         , VID: V03 , SN: FTXY
 
 NAME: "ATM AIM 0", DESCR: "ATM AIM"
 
-PID: AIM-ATM           , VID: V01 , SN: FOC12105CBV
+PID: AIM-ATM           , VID: V01 , SN: FOCBV
 
                         """
                         # pro = process_inventory_output(hostname, output)
