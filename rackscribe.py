@@ -71,9 +71,7 @@ def main() -> None:
                         device = load_device_attr(ip)
                         hostname = get_hostname(device)
                         output = send_cmd(device, "show inventory")
-                        device_inventory = process_inventory_output(
-                            hostname, output, inventory_table
-                        )
+                        device_inventory = process_inventory_output(hostname, output)
                         for item in device_inventory:
                             inventory_table.append(item)
 
