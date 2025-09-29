@@ -1,12 +1,13 @@
 import argparse
 import logging
+from datetime import datetime
 
 from dotenv import load_dotenv
 
 from src.commands import get_hostname, send_cmd
 from src.inventory import load_device_attr, load_inventory
 from src.logging_setup import logging_setup
-from src.output import create_config_file, create_inventory_file
+from src.output import create_config_file, create_inventory_file, process_inventory_output
 from src.sanitize import check_ip_address
 
 
@@ -59,6 +60,7 @@ def main() -> None:
 
         elif args.serial_numbers:
             log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
+            inventory_table: list[list[str]] = []
             # TABLE_COLUMNS = ["Hostname", "Name", "Description", "PID", "VID", "Serial Number"]
 
             for ip in ip_list:
@@ -67,30 +69,23 @@ def main() -> None:
                     if check_ip_address(ip):
                         log.info(f"Connecting to {ip}")
                         device = load_device_attr(ip)
-                        # hostname = get_hostname(device)
-                        # output = send_cmd(device, "show inventory")
-
-                        # TEST hostname/output
-                        hostname = "test_device"
-                        output = """
-
-NAME: "2851 chassis", DESCR: "2851 chassis"
-
-PID: CISCO2851         , VID: V03 , SN: FTXY
-
-NAME: "ATM AIM 0", DESCR: "ATM AIM"
-
-PID: AIM-ATM           , VID: V01 , SN: FOCBV
-
-                        """
-                        # pro = process_inventory_output(hostname, output)
-
-                        create_inventory_file("out_test")
+                        hostname = get_hostname(device)
+                        output = send_cmd(device, "show inventory")
+                        device_inventory = process_inventory_output(
+                            hostname, output, inventory_table
+                        )
+                        for item in device_inventory:
+                            inventory_table.append(item)
 
                     else:
                         log.error(f"Invalid IP address: '{ip}'")
                 except Exception as e:
                     log.warning(f"No serial numbers saved for {ip}. See logs for details. {e}")
+
+            now = datetime.now()
+            timestamp_str = now.strftime("%Y%m%d-%H%M%S")
+            filename = f"Inventory_{timestamp_str}"
+            create_inventory_file(filename, inventory_table)
         else:
             print("Use 'rackscribe --help' to display flag options.")
     else:

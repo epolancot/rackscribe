@@ -30,7 +30,9 @@ def create_config_file(hostname: str, show_run_output: str) -> str:
         log.error(f"Error while creating configuration file: {e}")
 
 
-def process_inventory_output(hostname: str, show_inventory_output: str) -> list[list[str]]:
+def process_inventory_output(
+    hostname: str, show_inventory_output: str, inventory_table: list[list[str]]
+) -> list[list[str]]:
     rows: list[list[str]] = []
     for m in _INVENTORY_RE.finditer(show_inventory_output):
         name = m.group("name")
@@ -40,9 +42,8 @@ def process_inventory_output(hostname: str, show_inventory_output: str) -> list[
     return rows
 
 
-# Test write excel
-def create_inventory_file(filename: str) -> str:
+def create_inventory_file(filename: str, inventory: list[list[str]]) -> str:
     TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]
 
-    df = pd.DataFrame([], columns=TABLE_COLUMNS)
-    df.to_excel(f"{filename}.xlsx", index=False)
+    df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)
+    df.to_excel(f"output/serial_numbers/{filename}.xlsx", index=False)
