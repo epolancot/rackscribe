@@ -36,8 +36,6 @@ def main() -> None:
 
     ip_list = load_inventory(args.inventory)
 
-    # TESTING
-
     if ip_list and len(ip_list) > 0:
         log.info("Loaded %d device(s).", len(ip_list))
         device_number = 0
@@ -61,7 +59,6 @@ def main() -> None:
         elif args.serial_numbers:
             log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
             inventory_table: list[list[str]] = []
-            # TABLE_COLUMNS = ["Hostname", "Name", "Description", "PID", "VID", "Serial Number"]
 
             for ip in ip_list:
                 device_number += 1
@@ -88,7 +85,6 @@ def main() -> None:
             print("Use 'rackscribe --help' to display flag options.")
     else:
         log.error(f"Error loading IP address list. Check '{args.inventory}' ")
-    # -----
 
 
 if __name__ == "__main__":
