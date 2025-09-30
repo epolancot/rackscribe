@@ -48,6 +48,7 @@ SECRET=**SECRET-PASSWORD**
 ### 4) Create an inventory file
 ```bash
 # inventory/lab.yaml
+---
 devices:
    - "10.0.1.10"
    - "10.0.1.11"
