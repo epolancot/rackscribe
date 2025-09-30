@@ -93,7 +93,6 @@ rackscribe/
 │  └─ sanitize.py
 ├─ pyproject.toml
 ├─ .pre-commit-config.yaml
-├─ .venv
 ├─ .env                   # untracked real device variables
 ├─ rackscribe.py          # argparse CLI
 └─ requirements.txt
