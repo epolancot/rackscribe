@@ -62,10 +62,18 @@ devices:
 python rackscribe.py --help
 
 # Save running-configs to ./configs
-python rackscribe.py -r -i inventory/lab.yaml --out-dir ./configs
+python rackscribe.py -r -i inventory/lab.yaml -o ./configs
 
 # Collect serial numbers to Excel
-python rackscribe.py -s -i inventory/lab.yaml --out-file ./reports/serials.xlsx
+python rackscribe.py -s -i inventory/lab.yaml
+
+# Change logging level
+python rackscribe.py -s -l 4
+
+# Defaults:
+-i inventory/lab.yaml
+-o output/
+-l INFO (3)
 
 ```
 ## Optional: Dev Quality Tooling
