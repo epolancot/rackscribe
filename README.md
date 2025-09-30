@@ -4,6 +4,7 @@
   <img alt="RackScribe — Get configs & serials" src="assets/banner-light.svg" width="100%">
 </picture>
 
+<br/>
 RackScribe is a fast and simple way to collect running configurations and serial numbers from your network devices using Netmiko. Tested on Cisco IE3300 and Cisco Modeling Labs 2.9.0 CSR1000v.
 
 ## Installation
