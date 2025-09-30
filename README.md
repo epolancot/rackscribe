@@ -100,6 +100,8 @@ rackscribe/
 ## Logging
 Default console logging level controlled via the --log_level 0-4 (eg. <i>rackscribe --log_level 2 [...]</i> to collect Warning messages)
 
+A log file is automatically created at the root folder level (logging.log).
+
 ### Levels
 
 | Level | Name      | Meaning                                     |
