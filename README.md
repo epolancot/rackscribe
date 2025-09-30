@@ -65,3 +65,46 @@ python rackscribe.py -r -i inventory/lab.yaml --out-dir ./configs
 python rackscribe.py -s -i inventory/lab.yaml --out-file ./reports/serials.xlsx
 
 ```
+## Optional: Dev Quality Tooling
+
+Pre-commit (Ruff lint/format on each commit)
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run -a
+```
+
+## Project Structure
+```bash
+rackscribe/
+├─ assets/                 # banner images
+├─ inventory/              # untracked real inventories
+│  └─ lab.yaml
+├─ reports/                # output reports (ignored)
+├─ configs/                # config dumps (ignored)
+├─ src/
+│  ├─ commands.py
+│  ├─ connection.py
+│  ├─ inventory.py
+│  ├─ loggin_setup.py
+│  ├─ output.py
+│  └─ sanitize.py
+├─ pyproject.toml
+├─ .pre-commit-config.yaml
+├─ .venv                  #
+├─ rackscribe.py          # argparse CLI
+└─ requirements.txt
+```
+
+## Logging
+Default console logging level controlled via the --log_level 0-4 (eg. <i>rackscribe --log_level 2 [...]</i> to collect Warning messages)
+
+### Levels
+
+| Level | Name      | Meaning                                     |
+|------:|-----------|---------------------------------------------|
+| 0     | CRITICAL  | Unrecoverable error; abort immediately.     |
+| 1     | ERROR     | Operation failed; continue to next item.    |
+| 2     | WARNING   | Unexpected but non-fatal condition.         |
+| 3     | INFO *(default)* | High-level progress messages.   |
+| 4     | DEBUG     | Verbose diagnostic details for troubleshooting. |
