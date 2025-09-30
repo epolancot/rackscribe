@@ -15,14 +15,6 @@ inventory/*.yaml
 # Local outputs
 output/configurations/*.*
 output/serial_numbers/*.*
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Editors/IDEs
-.idea/
-.fleet/
-.history/                # VS Code Local History extension
 # ----------------------------------
 
 
@@ -174,3 +166,11 @@ dmypy.json
 .AppleDouble
 .LSOverride
 ._
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editors/IDEs
+.idea/
+.fleet/
+.history/
