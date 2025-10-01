@@ -34,7 +34,7 @@ def main() -> None:
     parser.add_argument(
         "-i", "--inventory", type=str, default="inventory/lab.yaml", help="Inventory yml file path."
     )
-    parser.add_argument("-o", "--out-dir", type=str, default="output/", help="Output folder path.")
+    parser.add_argument("-o", "--out_dir", type=str, default="/output/", help="Output folder path.")
 
     args = parser.parse_args()
 
