@@ -15,13 +15,22 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         prog="rackscribe", description="Gather running configurations and serial numbers."
     )
-    parser.add_argument(
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "-r", "--running_config", action="store_true", help="Collect all running configurations."
     )
-    parser.add_argument(
+    group.add_argument(
         "-s", "--serial_numbers", action="store_true", help="Collect serial numbers."
     )
-    parser.add_argument("-l", "--log_level", type=int, default=3, help="Logging level.")
+    parser.add_argument(
+        "-l",
+        "--log_level",
+        type=int,
+        default=3,
+        choices=range(5),
+        help="Logging level: 0-Critical, 1-Error, 2-Warning, 3-Info, 4-Debug",
+    )
     parser.add_argument(
         "-i", "--inventory", type=str, default="inventory/lab.yaml", help="Inventory yml file path."
     )
