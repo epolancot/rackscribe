@@ -98,7 +98,8 @@ def main() -> None:
                 print("Use 'rackscribe --help' to display flag options.")
 
         else:
-            log.error(f"Error loading IP address list. Check '{args.inventory}' ")
+            print("Use 'rackscribe --help' to display flag options.")
+
     else:
         log.error(
             "No operation selected. Please select an operation. ['python rackscribe.py --help' for options]"
