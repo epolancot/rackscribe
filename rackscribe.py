@@ -46,56 +46,63 @@ def main() -> None:
 
     ip_list = load_inventory(args.inventory)
 
-    if ip_list and len(ip_list) > 0:
-        log.info("Loaded %d device(s).", len(ip_list))
-        device_number = 0
+    if args.running_config or args.serial_numbers:
+        if ip_list and len(ip_list) > 0:
+            log.info("Loaded %d device(s).", len(ip_list))
+            device_number = 0
 
-        if args.running_config:
-            log.info("RACKSCRIBE START - OPERATION RUNNING CONFIGURATIONS")
-            for ip in ip_list:
-                device_number += 1
-                try:
-                    if check_ip_address(ip):
-                        log.info(f"Connecting to {ip} - Operation Gather Running Configurations")
-                        device = load_device_attr(ip)
-                        hostname = get_hostname(device)
-                        output = send_cmd(device, "show running-config")
-                        create_config_file(f"{device_number}. {hostname}", output)
-                    else:
-                        log.error(f"Invalid IP address: '{ip}'")
-                except Exception as e:
-                    log.warning(f"No configuration saved for {ip}. See logs for details. {e}")
+            if args.running_config:
+                log.info("RACKSCRIBE START - OPERATION RUNNING CONFIGURATIONS")
+                for ip in ip_list:
+                    device_number += 1
+                    try:
+                        if check_ip_address(ip):
+                            log.info(
+                                f"Connecting to {ip} - Operation Gather Running Configurations"
+                            )
+                            device = load_device_attr(ip)
+                            hostname = get_hostname(device)
+                            output = send_cmd(device, "show running-config")
+                            create_config_file(f"{device_number}. {hostname}", output)
+                        else:
+                            log.error(f"Invalid IP address: '{ip}'")
+                    except Exception as e:
+                        log.warning(f"No configuration saved for {ip}. See logs for details. {e}")
 
-        elif args.serial_numbers:
-            log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
-            inventory_table: list[list[str]] = []
+            elif args.serial_numbers:
+                log.info("RACKSCRIBE START - OPERATION GATHER INVENTORY")
+                inventory_table: list[list[str]] = []
 
-            for ip in ip_list:
-                device_number += 1
-                try:
-                    if check_ip_address(ip):
-                        log.info(f"Connecting to {ip}")
-                        device = load_device_attr(ip)
-                        hostname = get_hostname(device)
-                        output = send_cmd(device, "show inventory")
-                        device_inventory = process_inventory_output(hostname, output)
-                        for item in device_inventory:
-                            inventory_table.append(item)
+                for ip in ip_list:
+                    device_number += 1
+                    try:
+                        if check_ip_address(ip):
+                            log.info(f"Connecting to {ip}")
+                            device = load_device_attr(ip)
+                            hostname = get_hostname(device)
+                            output = send_cmd(device, "show inventory")
+                            device_inventory = process_inventory_output(hostname, output)
+                            for item in device_inventory:
+                                inventory_table.append(item)
 
-                    else:
-                        log.error(f"Invalid IP address: '{ip}'")
-                except Exception as e:
-                    log.warning(f"No serial numbers saved for {ip}. See logs for details. {e}")
+                        else:
+                            log.error(f"Invalid IP address: '{ip}'")
+                    except Exception as e:
+                        log.warning(f"No serial numbers saved for {ip}. See logs for details. {e}")
 
-            now = datetime.now()
-            timestamp_str = now.strftime("%Y%m%d-%H%M%S")
-            filename = f"Inventory_{timestamp_str}"
-            create_inventory_file(filename, inventory_table)
+                now = datetime.now()
+                timestamp_str = now.strftime("%Y%m%d-%H%M%S")
+                filename = f"Inventory_{timestamp_str}"
+                create_inventory_file(filename, inventory_table)
+            else:
+                print("Use 'rackscribe --help' to display flag options.")
+
         else:
-            print("Use 'rackscribe --help' to display flag options.")
-
+            log.error(f"Error loading IP address list. Check '{args.inventory}' ")
     else:
-        log.error(f"Error loading IP address list. Check '{args.inventory}' ")
+        log.error(
+            "No operation selected. Please select an operation. ['python rackscribe.py --help' for options]"
+        )
 
 
 if __name__ == "__main__":
