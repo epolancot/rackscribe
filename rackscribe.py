@@ -102,7 +102,7 @@ def main() -> None:
                 filename = f"Inventory_{timestamp_str}"
                 create_inventory_file(filename, inventory_table)
             else:
-                print("Use 'rackscribe --help' to display flag options.")
+                log.info("Use 'rackscribe --help' to display flag options.")
 
         else:
             log.error(f"Error loading IP address list. Check '{args.inventory}' ")
