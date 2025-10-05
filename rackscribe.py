@@ -52,10 +52,10 @@ def main() -> None:
     ip_list = load_inventory(args.inventory)
 
     if args.running_config or args.serial_numbers:
-        if ip_list and len(ip_list) > 0:
-            log.info("Loaded %d device(s).", len(ip_list))
-            device_number = 0
+        log.info("Loaded %d device(s).", len(ip_list))
+        device_number = 0
 
+        if ip_list and len(ip_list) > 0:
             if args.running_config:
                 log.info("RACKSCRIBE START - OPERATION RUNNING CONFIGURATIONS")
                 for ip in ip_list:
