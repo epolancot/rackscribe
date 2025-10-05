@@ -11,8 +11,8 @@ def check_ip_address(ip: str) -> bool:
         return False
 
 
-def check_path(filepath: str) -> bool:
-    """Ensure folder path provided is valid"""
+def check_valid_chars(filepath: str) -> bool:
+    """Checks valid characters for file paths and names"""
     pattern = r"^(?:/[^/]+)*?/?(?:[^/]+\.[a-zA-Z0-9]+)?$"
     if not re.fullmatch(pattern, filepath):
         return False

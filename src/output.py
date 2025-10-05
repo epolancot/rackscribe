@@ -1,11 +1,11 @@
 import logging
 import re
+from datetime import datetime
 
 import pandas as pd
 
 _INVENTORY_RE = re.compile(
-    """Regex used in process_inventory_output() to get the values for name, description and serial number from "show inventory" command.
-     VID and PID fields included. Add these field if needed."""
+    # Regex used in process_inventory_output to get field values. Implement PID and VID if needed.
     r"""
         NAME:\s*"(?P<name>[^"]+)",\s*
         DESCR:\s*"(?P<description>[^"]+)"\s*
@@ -16,7 +16,9 @@ _INVENTORY_RE = re.compile(
     re.MULTILINE | re.VERBOSE,
 )
 
+
 _IOS_PREAMBLE_RE = re.compile(
+    # Regex used in remove_config_preamble to strip configuration preamble text in Cisco IOS.
     r"""
     \A
     (?:\s*Building\ configuration\.\.\.\s*\n)?
@@ -28,7 +30,7 @@ _IOS_PREAMBLE_RE = re.compile(
 
 
 def remove_config_preamble(config: str) -> str:
-    """Strip IOS' preamble"""
+    """Strip IOS' preamble - Idempotent"""
     # Normalize newlines
     clean_config = config.replace("\r\n", "\n").replace("\r", "\n")
     clean_config = _IOS_PREAMBLE_RE.sub("", clean_config)
@@ -59,6 +61,11 @@ def process_inventory_output(hostname: str, show_inventory_output: str) -> list[
 
 
 def create_inventory_file(filename: str, inventory: list[list[str]]) -> None:
+    now = datetime.now()
+    timestamp_str = now.strftime("%Y%m%d-%H%M%S")
+
+    filename = f"{filename}_{timestamp_str}"
+
     TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]
 
     df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)

@@ -1,6 +1,5 @@
 import argparse
 import logging
-from datetime import datetime
 
 from dotenv import load_dotenv
 
@@ -40,6 +39,8 @@ def main() -> None:
         "-i", "--inventory", type=str, default="inventory/lab.yaml", help="Inventory yml file path."
     )
     parser.add_argument("-o", "--out_dir", type=str, default="output/", help="Output folder path.")
+
+    parser.add_argument("-f", "--out_file", type=str, default="Inventory", help="Output file name.")
 
     args = parser.parse_args()
 
@@ -97,9 +98,7 @@ def main() -> None:
                     except Exception as e:
                         log.warning(f"No serial numbers saved for {ip}. See logs for details. {e}")
 
-                now = datetime.now()
-                timestamp_str = now.strftime("%Y%m%d-%H%M%S")
-                filename = f"Inventory_{timestamp_str}"
+                filename = args.out_file
                 create_inventory_file(filename, inventory_table)
             else:
                 log.info("Use 'rackscribe --help' to display flag options.")
