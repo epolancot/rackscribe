@@ -4,8 +4,8 @@ import re
 import pandas as pd
 
 _INVENTORY_RE = re.compile(
-    # Regex used in process_inventory_output() to get the values for name, description and serial number from "show inventory" command.
-    # VID and PID fields included. Add these field if needed.
+    """Regex used in process_inventory_output() to get the values for name, description and serial number from "show inventory" command.
+     VID and PID fields included. Add these field if needed."""
     r"""
         NAME:\s*"(?P<name>[^"]+)",\s*
         DESCR:\s*"(?P<description>[^"]+)"\s*
@@ -15,6 +15,24 @@ _INVENTORY_RE = re.compile(
     """,
     re.MULTILINE | re.VERBOSE,
 )
+
+_IOS_PREAMBLE_RE = re.compile(
+    r"""
+    \A
+    (?:\s*Building\ configuration\.\.\.\s*\n)?
+    (?:\s*Current\ configuration\s*:\s*.*?bytes\s*\n)?
+    (?:\n)*
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+
+def remove_config_preamble(config: str) -> str:
+    """Strip IOS' preamble"""
+    # Normalize newlines
+    clean_config = config.replace("\r\n", "\n").replace("\r", "\n")
+    clean_config = _IOS_PREAMBLE_RE.sub("", clean_config)
+    return clean_config.lstrip("\n")
 
 
 def create_config_file(hostname: str, show_run_output: str) -> None:
