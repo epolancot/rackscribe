@@ -68,7 +68,9 @@ def main() -> None:
                             device = load_device_attr(ip)
                             hostname = get_hostname(device)
                             output = send_cmd(device, "show running-config")
-                            create_config_file(f"{device_number}. {hostname}", output)
+                            final_output = remove_config_preamble(output)
+
+                            create_config_file(f"{device_number}. {hostname}", final_output)
                         else:
                             log.error(f"Invalid IP address: '{ip}'")
                     except Exception as e:
@@ -100,11 +102,10 @@ def main() -> None:
                 filename = f"Inventory_{timestamp_str}"
                 create_inventory_file(filename, inventory_table)
             else:
-                print("Use 'rackscribe --help' to display flag options.")
+                log.info("Use 'rackscribe --help' to display flag options.")
 
         else:
-            print("Use 'rackscribe --help' to display flag options.")
-
+            log.error(f"Error loading IP address list. Check '{args.inventory}' ")
     else:
         log.error(
             "No operation selected. Please select an operation. ['python rackscribe.py --help' for options]"
