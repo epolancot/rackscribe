@@ -7,7 +7,12 @@ from dotenv import load_dotenv
 from src.commands import get_hostname, send_cmd
 from src.inventory import load_device_attr, load_inventory
 from src.logging_setup import logging_setup
-from src.output import create_config_file, create_inventory_file, process_inventory_output
+from src.output import (
+    create_config_file,
+    create_inventory_file,
+    process_inventory_output,
+    remove_config_preamble,
+)
 from src.sanitize import check_ip_address
 
 
@@ -63,7 +68,9 @@ def main() -> None:
                             device = load_device_attr(ip)
                             hostname = get_hostname(device)
                             output = send_cmd(device, "show running-config")
-                            create_config_file(f"{device_number}. {hostname}", output)
+                            final_output = remove_config_preamble(output)
+
+                            create_config_file(f"{device_number}. {hostname}", final_output)
                         else:
                             log.error(f"Invalid IP address: '{ip}'")
                     except Exception as e:
