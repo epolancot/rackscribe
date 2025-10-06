@@ -98,8 +98,9 @@ def main() -> None:
                     except Exception as e:
                         log.warning(f"No serial numbers saved for {ip}. See logs for details. {e}")
 
-                filename = args.out_file
-                create_inventory_file(filename, inventory_table)
+                file_name = args.out_file
+                file_path = args.out_dir
+                create_inventory_file(file_name, file_path, inventory_table)
             else:
                 log.info("Use 'rackscribe --help' to display flag options.")
 
