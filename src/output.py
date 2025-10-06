@@ -60,13 +60,13 @@ def process_inventory_output(hostname: str, show_inventory_output: str) -> list[
     return rows
 
 
-def create_inventory_file(filename: str, inventory: list[list[str]]) -> None:
+def create_inventory_file(file_name: str, file_path: str, inventory: list[list[str]]) -> None:
     now = datetime.now()
     timestamp_str = now.strftime("%Y%m%d-%H%M%S")
 
-    filename = f"{filename}_{timestamp_str}"
+    file_name = f"{file_name}_{timestamp_str}"
 
     TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]
 
     df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)
-    df.to_excel(f"output/serial_numbers/{filename}.xlsx", index=False)
+    df.to_excel(f"{file_path}inventory/{file_name}.xlsx", index=False)

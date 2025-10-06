@@ -14,7 +14,7 @@ inventory/*.yaml
 
 # Local outputs
 output/configurations/*.*
-output/serial_numbers/*.*
+output/inventory/*.*
 # ----------------------------------
 
 
