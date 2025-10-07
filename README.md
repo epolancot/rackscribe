@@ -91,8 +91,9 @@ rackscribe/
 ├─ assets/                 # banner images
 ├─ inventory/              # untracked real inventories
 │  └─ lab.yaml
-├─ reports/                # output reports (ignored)
-├─ configs/                # config dumps (ignored)
+├─ output/                # output configs/eports (ignored)
+│  ├─ configurations/                # config dumps (ignored)
+│  └─ inventory/                     # serial numbers (ignored)
 ├─ src/
 │  ├─ commands.py
 │  ├─ connection.py
