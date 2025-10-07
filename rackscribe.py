@@ -22,7 +22,7 @@ def main() -> None:
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
-        "-r", "--running_config", action="store_true", help="Collect all running configurations."
+        "-r", "--running_config", action="store_true", help="Gather running configurations."
     )
     group.add_argument(
         "-s", "--serial_numbers", action="store_true", help="Collect serial numbers."
