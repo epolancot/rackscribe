@@ -19,6 +19,8 @@ def load_inventory(path: str) -> list:
     except FileNotFoundError:
         log.error(f"Inventory file not found: '{path}'")
 
+    return []
+
 
 def load_device_attr(ip: str) -> dict:
     device = {
