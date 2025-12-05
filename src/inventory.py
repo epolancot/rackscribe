@@ -24,9 +24,9 @@ def load_device_attr(ip: str) -> dict:
     device = {
         "device_type": os.getenv("DEVICE_TYPE"),
         "host": ip,
-        "username": os.getenv("USERNAME"),
-        "password": os.getenv("PASSWORD"),
-        "secret": os.getenv("SECRET"),
+        "username": os.getenv("DEVICE_USERNAME"),
+        "password": os.getenv("DEVICE_PASSWORD"),
+        "secret": os.getenv("DEVICE_SECRET"),
     }
 
     return device
