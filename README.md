@@ -40,9 +40,9 @@ pip install -r requirements.txt
 ```bash
 # .env (example)
 DEVICE_TYPE=cisco_ios
-USERNAME=**USERNAME**
-PASSWORD=**PASSWORD**
-SECRET=**SECRET-PASSWORD**
+DEVICE_USERNAME=**USERNAME**
+DEVICE_PASSWORD=**PASSWORD**
+DEVICE_SECRET=**SECRET-PASSWORD**
 ```
 
 ### 4) Create an inventory file
