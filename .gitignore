@@ -16,9 +16,6 @@ inventory/*.yaml
 output/configurations/*.*
 output/inventory/*.*
 
-# Other
-mypy.ini
-
 # ----------------------------------
 
 
