@@ -1,5 +1,5 @@
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, cast
 
 from .connection import net_connection
 
@@ -13,7 +13,7 @@ def send_cmd(
     """Send one command."""
 
     with net_connection(params) as conn:
-        return conn.send_command(command, **kwargs)
+        return cast(str, conn.send_command(command, **kwargs))
 
 
 # Send several commands
@@ -24,11 +24,10 @@ def send_cmd_batch(
 ) -> dict[str, str]:
     """Send several commands in one session."""
     output: dict[str, str] = {}
-    command_number = 0
     with net_connection(params) as conn:
-        for cmd in commands:
-            command_number += 1
-            output[command_number] = conn.send_command(cmd, **kwargs)
+        for i, cmd in enumerate(commands, start=1):
+            output[str(i)] = conn.send_command(cmd, **kwargs)
+
     return output
 
 
@@ -36,4 +35,4 @@ def get_hostname(params: Mapping[str, Any]) -> str:
     with net_connection(params) as conn:
         prompt = conn.find_prompt()
         hostname = prompt[:-1]
-        return hostname
+        return cast(str, hostname)

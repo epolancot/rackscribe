@@ -15,6 +15,7 @@ inventory/*.yaml
 # Local outputs
 output/configurations/*.*
 output/inventory/*.*
+
 # ----------------------------------
 
 
