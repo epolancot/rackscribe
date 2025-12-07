@@ -1,5 +1,6 @@
 import argparse
 import logging
+from importlib.metadata import version
 
 from dotenv import load_dotenv
 
@@ -56,6 +57,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         default="Inventory",
         help="Output file name (for serial number operation).",
+    )
+    parser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version=f"Rackscribe {version('rackscribe')}",
     )
 
     return parser
