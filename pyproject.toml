@@ -5,6 +5,24 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rackscribe"
 version = "2.0"
+dependencies = [
+    "netmiko",
+    "ntc_templates",
+    "python-dotenv",
+    "pandas",
+    "openpyxl",
+    "PyYAML",
+    "textfsm",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy",
+    "pandas-stubs",
+    "types-PyYAML",
+    "ruff",
+    "pre-commit",
+]
 
 [project.scripts]
 rackscribe = "rackscribe.__main__:main"

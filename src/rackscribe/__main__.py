@@ -42,7 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--inventory",
         type=str,
         default="inventory/lab.yaml",
-        help="Inventory yml file path.",
+        help="Inventory yaml file path.",
     )
     parser.add_argument(
         "-o",
