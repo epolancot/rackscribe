@@ -16,11 +16,16 @@ def load_inventory(path: str) -> list:
             log.error(f"Invalid inventory format in file: {path}")
             return []
 
-        if "inventory" not in devices:
-            log.error(f"Missing 'inventory' key in inventory file: {path}")
+        # Case-insensitive key handling
+        normalized_devices = {k.lower(): v for k, v in devices.items()}
+
+        if "inventory" not in normalized_devices:
+            log.error(
+                f"Missing 'inventory' key in inventory file: '{path}'. See README for proper inventory file format."
+            )
             return []
 
-        inventory = list(dict.fromkeys(devices["inventory"]))
+        inventory = list(dict.fromkeys(normalized_devices["inventory"]))
         return inventory
 
     except FileNotFoundError:
