@@ -1,3 +1,39 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rackscribe"
+version = "2.0"
+dependencies = [
+    "netmiko",
+    "ntc_templates",
+    "python-dotenv",
+    "pandas",
+    "openpyxl",
+    "PyYAML",
+    "textfsm",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy",
+    "pandas-stubs",
+    "types-PyYAML",
+    "types-openpyxl",
+    "ruff",
+    "pre-commit",
+]
+
+[project.scripts]
+rackscribe = "rackscribe.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py313"
