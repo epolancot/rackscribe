@@ -84,7 +84,7 @@ def main() -> None:
         log.error(f"Error loading IP address list. Check '{args.inventory}'.")
         return
 
-    log.info("Loaded %d device(s).", len(ip_list))
+    log.info(f"Loaded {len(ip_list)} device(s).")
 
     if args.running_config:
         gather_running_configs(ip_list)

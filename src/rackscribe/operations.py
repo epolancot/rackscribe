@@ -25,13 +25,10 @@ def gather_running_configs(ip_list: list[str]) -> None:
         device_number += 1
         try:
             if not check_ip_address(ip):
-                log.error("Invalid IP address: '%s'", ip)
+                log.error(f"Invalid IP address: '{ip}'")
                 continue
 
-            log.info(
-                "Connecting to %s - Operation Gather Running Configurations",
-                ip,
-            )
+            log.info(f"Connecting to host {ip} - Operation Gather Running Configurations")
 
             device: Mapping[str, Any] = load_device_attr(ip)
             hostname = get_hostname(device)
@@ -40,11 +37,7 @@ def gather_running_configs(ip_list: list[str]) -> None:
 
             create_config_file(f"{device_number}. {hostname}", final_output)
         except Exception as exc:  # noqa: BLE001
-            log.warning(
-                "No configuration saved for %s. See logs for details. %s",
-                ip,
-                exc,
-            )
+            log.warning(f"No configuration saved for IP address {ip}. See logs for details. {exc}")
 
 
 def gather_serial_numbers(
@@ -62,10 +55,10 @@ def gather_serial_numbers(
         device_number += 1
         try:
             if not check_ip_address(ip):
-                log.error("Invalid IP address: '%s'", ip)
+                log.error(f"Invalid IP address: '{ip}'")
                 continue
 
-            log.info("Connecting to %s", ip)
+            log.infof(f"Connecting to host {ip}")
 
             device: Mapping[str, Any] = load_device_attr(ip)
             hostname = get_hostname(device)
@@ -75,10 +68,6 @@ def gather_serial_numbers(
             for item in device_inventory:
                 inventory_table.append(item)
         except Exception as exc:  # noqa: BLE001
-            log.warning(
-                "No serial numbers saved for %s. See logs for details. %s",
-                ip,
-                exc,
-            )
+            log.warning(f"No serial numbers saved for {ip}. See logs for details. {exc}")
 
     create_inventory_file(out_file, out_dir, inventory_table)
