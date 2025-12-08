@@ -37,7 +37,13 @@ def gather_running_configs(ip_list: list[str]) -> None:
 
             create_config_file(f"{device_number}. {hostname}", final_output)
         except Exception as exc:  # noqa: BLE001
-            log.warning(f"No configuration saved for IP address {ip}. See logs for details. {exc}")
+            log.warning(
+                f"No configuration saved for IP address {ip}. See rackscribe.log for details."
+            )
+            log.debug(
+                f"Exception while collecting running configuration for IP address {ip}. Details: {exc}",
+                exc_info=True,
+            )
 
 
 def gather_serial_numbers(
@@ -68,6 +74,10 @@ def gather_serial_numbers(
             for item in device_inventory:
                 inventory_table.append(item)
         except Exception as exc:  # noqa: BLE001
-            log.warning(f"No serial numbers saved for {ip}. See logs for details. {exc}")
+            log.warning(f"No serial numbers saved for {ip}. See rackscribe.log for details.")
+            log.debug(
+                f"Exception while collecting inventory for IP address {ip}. Details: {exc}",
+                exc_info=True,
+            )
 
     create_inventory_file(out_file, out_dir, inventory_table)

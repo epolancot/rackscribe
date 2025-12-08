@@ -47,9 +47,15 @@ def create_config_file(hostname: str, show_run_output: str) -> None:
     try:
         with open(path, "w") as f:
             f.write(show_run_output)
-        log.info(f"File created. PATH: '{path}'.")
-    except Exception as e:
-        log.error(f"Error while creating configuration file: {e}")
+    except OSError as exc:
+        log.error(
+            f"Failed to write configuration file for {hostname} at '{path}'. See rackscribe.log for details."
+        )
+        log.debug(
+            f"Failed to write configuration file for {hostname} at '{path}': {exc}", exc_info=True
+        )
+
+    log.info(f"File created for {hostname} at '{path}'.")
 
 
 def process_inventory_output(hostname: str, show_inventory_output: str) -> list[list[str]]:
@@ -80,6 +86,9 @@ def create_inventory_file(file_name: str, file_path: str, inventory: list[list[s
         df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)
         df.to_excel(f"{full_path}", index=False)
     except (OSError, ValueError) as exc:
-        log.error(f"Failed to write inventory Excel file at {full_path}: {exc}")
+        log.error(
+            f"Failed to write inventory Excel file at '{full_path}'. See rackscribe.log for details."
+        )
+        log.debug(f"Failed to write inventory Excel file at {full_path}: {exc}", exc_info=True)
         return
     log.info(f"Inventory Excel file create at {full_path}")

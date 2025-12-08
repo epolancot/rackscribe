@@ -25,11 +25,13 @@ def net_connection(
             conn.enable()
         yield conn
     except (NetmikoTimeoutException, NetmikoAuthenticationException) as exc:
-        log.error(f"Error talking to {host}: {exc}")
+        log.error(f"Error talking to {host}. See rackscribe.log for details.")
+        log.debug(f"Error talking to {host}. Details: {exc}", exc_info=True)
         raise
 
     except Exception as exc:
-        log.error(f"Unexpected error talking to {host}: {exc}")
+        log.error(f"Unexpected error talking to {host}. See rackscribe.log for details.")
+        log.debug(f"Unexpected error talking to {host}. Details: {exc}", exc_info=True)
         raise
 
     finally:
