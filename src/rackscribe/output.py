@@ -91,4 +91,4 @@ def create_inventory_file(file_name: str, file_path: str, inventory: list[list[s
         )
         log.debug(f"Failed to write inventory Excel file at {full_path}: {exc}", exc_info=True)
         return
-    log.info(f"Inventory Excel file create at {full_path}")
+    log.info(f"Inventory Excel file succesfully created at {full_path}")
