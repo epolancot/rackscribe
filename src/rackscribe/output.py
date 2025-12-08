@@ -3,6 +3,9 @@ import re
 from datetime import datetime
 
 import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.styles import Font, PatternFill
+from openpyxl.utils import get_column_letter
 
 log = logging.getLogger("rackscribe")
 
@@ -68,6 +71,41 @@ def process_inventory_output(hostname: str, show_inventory_output: str) -> list[
     return rows
 
 
+def format_inventory_worksheet(excel_path: str) -> None:
+    """Apply basic formatting to the inventory Excel worksheet."""
+    wb = load_workbook(excel_path)
+    ws = wb.active
+
+    # Freeze header row
+    ws.freeze_panes = "A2"
+
+    # Enable auto-filter
+    ws.auto_filter.ref = ws.dimensions
+
+    # Header style
+    header_fill = PatternFill("solid", fgColor="DDDDDD")
+    header_font = Font(bold=True)
+
+    for cell in ws[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+
+    # Auto-size columns based on max cell width
+    for col_idx, column_cells in enumerate(ws.columns, start=1):
+        max_length = 0
+        for cell in column_cells:
+            try:
+                if cell.value:
+                    max_length = max(max_length, len(str(cell.value)))
+            except Exception:
+                pass
+
+        adjusted_width = max_length + 2
+        ws.column_dimensions[get_column_letter(col_idx)].width = adjusted_width
+
+    wb.save(excel_path)
+
+
 def create_inventory_file(file_name: str, file_path: str, inventory: list[list[str]]) -> None:
     """Write the collected inventory to a timestamped Excel file."""
     now = datetime.now()
@@ -85,6 +123,8 @@ def create_inventory_file(file_name: str, file_path: str, inventory: list[list[s
     try:
         df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)
         df.to_excel(f"{full_path}", index=False)
+        # Apply formatting AFTER creation
+        format_inventory_worksheet(full_path)
     except (OSError, ValueError) as exc:
         log.error(
             f"Failed to write inventory Excel file at '{full_path}'. See rackscribe.log for details."
