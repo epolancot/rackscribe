@@ -73,6 +73,8 @@ def gather_serial_numbers(
 
             for item in device_inventory:
                 inventory_table.append(item)
+
+            log.info(f"Inventory information retrieved successfully from {hostname} ({ip})")
         except Exception as exc:  # noqa: BLE001
             log.warning(f"No serial numbers saved for {ip}. See rackscribe.log for details.")
             log.debug(
