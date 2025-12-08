@@ -6,6 +6,7 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import Font, PatternFill
 from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.worksheet import Worksheet
 
 log = logging.getLogger("rackscribe")
 
@@ -75,6 +76,13 @@ def format_inventory_worksheet(excel_path: str) -> None:
     """Apply basic formatting to the inventory Excel worksheet."""
     wb = load_workbook(excel_path)
     ws = wb.active
+
+    if not isinstance(ws, Worksheet):
+        log.warning(
+            f"Active sheet in '{excel_path}' is not a standard worksheet. "
+            "Skipping Excel formatting."
+        )
+        return
 
     # Freeze header row
     ws.freeze_panes = "A2"
