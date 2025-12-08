@@ -130,9 +130,24 @@ Stats are logged at the end of:
   - `gather_serial_numbers()`
 
 ## Increase logging verbosity
+Default console logging level controlled via the -l flag, 0-4.
+
+### Example
 ```bash
 rackscribe -r -l 4
 ```
+
+### Levels
+
+| Level | Name      | Meaning                                     |
+|------:|-----------|---------------------------------------------|
+| 0     | CRITICAL  | Unrecoverable error; abort immediately.     |
+| 1     | ERROR     | Operation failed; continue to next item.    |
+| 2     | WARNING   | Unexpected but non-fatal condition.         |
+| 3     | INFO *(default)* | High-level progress messages.   |
+| 4     | DEBUG     | Verbose diagnostic details for troubleshooting. |
+
+A log file is automatically created at the root folder level (logging.log).
 
 ## Default CLI Values:
 | Option | Default              |
@@ -185,18 +200,3 @@ rackscribe/
 ├─ .pre-commit-config.yaml
 └─ .env                    # untracked secrets
 ```
-
-## Logging
-Default console logging level controlled via the --log_level 0-4 (eg. <i>rackscribe --log_level 2 [...]</i> to collect Warning messages)
-
-### Levels
-
-| Level | Name      | Meaning                                     |
-|------:|-----------|---------------------------------------------|
-| 0     | CRITICAL  | Unrecoverable error; abort immediately.     |
-| 1     | ERROR     | Operation failed; continue to next item.    |
-| 2     | WARNING   | Unexpected but non-fatal condition.         |
-| 3     | INFO *(default)* | High-level progress messages.   |
-| 4     | DEBUG     | Verbose diagnostic details for troubleshooting. |
-
-A log file is automatically created at the root folder level (logging.log).
