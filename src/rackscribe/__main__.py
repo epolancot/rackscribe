@@ -59,6 +59,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output file name (for serial number operation).",
     )
     parser.add_argument(
+        "--stats",
+        action="store_true",
+        help="Show elapsed time and operation statistics at the end of operation.",
+    )
+    parser.add_argument(
         "-V",
         "--version",
         action="version",
@@ -87,12 +92,13 @@ def main() -> None:
     log.info(f"Loaded {len(ip_list)} device(s).")
 
     if args.running_config:
-        gather_running_configs(ip_list)
+        gather_running_configs(ip_list, show_stats=args.stats)
     elif args.serial_numbers:
         gather_serial_numbers(
             ip_list=ip_list,
             out_file=args.out_file,
             out_dir=args.out_dir,
+            show_stats=args.stats,
         )
     else:
         log.error(
