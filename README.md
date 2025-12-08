@@ -114,18 +114,33 @@ Timestamped Excel file name example:
 
 _output/inventory/Inventory_YYYYMMDD-HHMMSS.xlsx_
 
+## Stats for geeks
+Optional `--stats` flag to show operation statistics:
+  - Elapsed time per operation.
+  - Number of devices processed.
+  - Success / failure counts.
+  - Derived success rate (devices per second).
 
-# Increase logging verbosity
+### Example
+```bash
+rackscribe -r --stats
+```
+Stats are logged at the end of:
+  - `gather_running_configs()`
+  - `gather_serial_numbers()`
+
+## Increase logging verbosity
 ```bash
 rackscribe -r -l 4
 ```
 
-# Default CLI Values:
+## Default CLI Values:
 | Option | Default              |
 | ------ | -------------------- |
 | `-i`   | `inventory/lab.yaml` |
 | `-o`   | `output/`            |
 | `-l`   | `INFO (3)`           |
+| `--stats`   | `FALSE`           |
 
 
 ## Optional: Dev Quality Tooling
