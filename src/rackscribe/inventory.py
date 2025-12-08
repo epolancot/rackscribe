@@ -11,14 +11,27 @@ def load_inventory(path: str) -> list:
     try:
         with open(path, encoding="utf-8") as f:
             devices = yaml.safe_load(f)
-            inventory = list(dict.fromkeys(devices["inventory"]))
 
-            return inventory
-    except TypeError as e:
-        log.error(f"Error loading inventory file.\n '{e}'.")
+        if not isinstance(devices, dict):
+            log.error(f"Invalid inventory format in file: {path}")
+            return []
+
+        if "inventory" not in devices:
+            log.error(f"Missing 'inventory' key in inventory file: {path}")
+            return []
+
+        inventory = list(dict.fromkeys(devices["inventory"]))
+        return inventory
+
     except FileNotFoundError:
-        log.error(f"Inventory file not found: '{path}'")
+        log.error(f"Inventory file not found: {path}")
 
+    except yaml.YAMLError as exc:
+        log.error(f"Invalid YAML format in inventory file {path}: {exc}")
+
+    except Exception as exc:
+        log.exception(f"Unexpected error loading inventory file {path}: {exc}")
+        raise
     return []
 
 

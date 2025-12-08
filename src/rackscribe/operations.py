@@ -58,7 +58,7 @@ def gather_serial_numbers(
                 log.error(f"Invalid IP address: '{ip}'")
                 continue
 
-            log.infof(f"Connecting to host {ip}")
+            log.info(f"Connecting to host {ip}")
 
             device: Mapping[str, Any] = load_device_attr(ip)
             hostname = get_hostname(device)

@@ -4,6 +4,8 @@ from datetime import datetime
 
 import pandas as pd
 
+log = logging.getLogger("rackscribe")
+
 _INVENTORY_RE = re.compile(
     # Regex used in process_inventory_output to get field values. Implement PID and VID if needed.
     r"""
@@ -38,7 +40,7 @@ def remove_config_preamble(config: str) -> str:
 
 
 def create_config_file(hostname: str, show_run_output: str) -> None:
-    log = logging.getLogger("rackscribe")
+    """Write running configuration to a per-host file."""
     log.info(f"Creating configuration file '{hostname}'.")
     path = f"output/configurations/{hostname}.cfg"
 
@@ -61,12 +63,23 @@ def process_inventory_output(hostname: str, show_inventory_output: str) -> list[
 
 
 def create_inventory_file(file_name: str, file_path: str, inventory: list[list[str]]) -> None:
+    """Write the collected inventory to a timestamped Excel file."""
     now = datetime.now()
     timestamp_str = now.strftime("%Y%m%d-%H%M%S")
 
-    file_name = f"{file_name}_{timestamp_str}"
+    base_name = f"{file_name}_{timestamp_str}"
+    full_path = f"{file_path}inventory/{base_name}.xlsx"
+
+    if not inventory:
+        log.warning(f"No inventory data to write. Skipping Excel file creation {full_path}.")
+        return
 
     TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]
 
-    df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)
-    df.to_excel(f"{file_path}inventory/{file_name}.xlsx", index=False)
+    try:
+        df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)
+        df.to_excel(f"{full_path}", index=False)
+    except (OSError, ValueError) as exc:
+        log.error(f"Failed to write inventory Excel file at {full_path}: {exc}")
+        return
+    log.info(f"Inventory Excel file create at {full_path}")
