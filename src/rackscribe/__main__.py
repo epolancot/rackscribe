@@ -1,6 +1,7 @@
 import argparse
 import logging
 from importlib.metadata import version
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -92,19 +93,27 @@ def main() -> None:
 
     # Auto-setup mode ----
     if getattr(args, "auto_setup", False):
-        log.info("Starting auto-setup operation.")
+        log.info("Starting RackScribe auto-setup operation.")
         success = auto_setup()
 
         if success:
-            log.info(
-                "Auto-setup completed. "
-                "Review the generated inventory file and .env before running operations."
-            )
+            log.info("Review inventory file and .env before running operations.")
         else:
             log.error("Auto-setup encountered errors. Check rackscribe.log for details.")
         return
 
     # Normal operations ----
+
+    # Check .env exists
+    env_path = Path(".env")
+    if not env_path.exists():
+        log.warning(
+            f"No .env file found at '{env_path}'. "
+            "Environment variables may be missing. "
+            "You can generate a sample .env with 'rackscribe --auto-setup'."
+        )
+        return
+
     try:
         out_dir = validate_output_path(args.out_dir)
     except ValueError as exc:

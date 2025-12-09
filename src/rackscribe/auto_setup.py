@@ -8,13 +8,11 @@ def auto_setup() -> bool:
     """Run initial RackScribe setup (inventory + .env)."""
     log = logging.getLogger("rackscribe")
 
-    log.info("Starting RackScribe auto-setup.")
-
     inventory_ok = create_initial_inventory_file()
     env_ok = create_initial_env_file()
 
     if inventory_ok and env_ok:
-        log.info("Auto-setup operation completed successfully.")
+        log.info("Auto-setup operation completed.")
         return True
 
     if inventory_ok and not env_ok:
@@ -30,6 +28,12 @@ def auto_setup() -> bool:
 def create_initial_inventory_file() -> bool:
     """Create an inventory folder and YAML file with a mock device IP address list."""
     log = logging.getLogger("rackscribe")
+    inventory_file_path = Path("inventory") / "devices.yaml"
+
+    # Do not overwrite existing credentials.
+    if inventory_file_path.exists():
+        log.info(f"devices.yaml file already exists at '{inventory_file_path}'. Skipping creation.")
+        return True
 
     sample_inventory = [
         "10.0.1.10",
