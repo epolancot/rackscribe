@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rackscribe"
-version = "2.0"
+version = "2.0.1"
 dependencies = [
     "netmiko",
     "ntc_templates",
