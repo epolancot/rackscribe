@@ -4,6 +4,7 @@ from importlib.metadata import version
 
 from dotenv import load_dotenv
 
+from .auto_setup import auto_setup
 from .inventory import load_inventory
 from .logging_setup import setup_logging
 from .operations import gather_running_configs, gather_serial_numbers
@@ -37,7 +38,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "-l",
-        "--log_level",
+        "--log-level",
         type=int,
         default=3,
         choices=range(5),
@@ -52,14 +53,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "-o",
-        "--out_dir",
+        "--out-dir",
         type=str,
         default="outputs/",
         help="Output folder path (default: output/).",
     )
     parser.add_argument(
         "-f",
-        "--out_file",
+        "--out-file",
         type=str,
         default="Inventory",
         help="Base output file name for inventory Excel export (default: Inventory).",
@@ -89,6 +90,21 @@ def main() -> None:
     setup_logging(level=logging_levels[args.log_level])
     log = logging.getLogger("rackscribe")
 
+    # Auto-setup mode ----
+    if getattr(args, "auto_setup", False):
+        log.info("Starting auto-setup operation.")
+        success = auto_setup()
+
+        if success:
+            log.info(
+                "Auto-setup completed. "
+                "Review the generated inventory file and .env before running operations."
+            )
+        else:
+            log.error("Auto-setup encountered errors. Check rackscribe.log for details.")
+        return
+
+    # Normal operations ----
     try:
         out_dir = validate_output_path(args.out_dir)
     except ValueError as exc:
