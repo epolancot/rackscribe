@@ -13,7 +13,7 @@ from .sanitize import validate_output_path
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="rackscribe",
-        description="Gather running configurations and serial numbers.",
+        description="Collect running configurations and serial numbers from network devices and generate inventory reports.",
     )
 
     group = parser.add_mutually_exclusive_group()
@@ -29,6 +29,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Collect serial numbers.",
     )
+    group.add_argument(
+        "--auto-setup",
+        action="store_true",
+        help="Create a sample inventory file and .env template (does not overwrite existing files).",
+    )
 
     parser.add_argument(
         "-l",
@@ -36,28 +41,28 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=3,
         choices=range(5),
-        help="Logging level: 0-Critical, 1-Error, 2-Warning, 3-Info, 4-Debug",
+        help="Logging level: 0-Critical, 1-Error, 2-Warning, 3-Info (default), 4-Debug",
     )
     parser.add_argument(
         "-i",
         "--inventory",
         type=str,
-        default="inventory/lab.yaml",
-        help="Inventory yaml file path.",
+        default="inventory/devices.yaml",
+        help="Inventory YAML file path (default: inventory/devices.yaml).",
     )
     parser.add_argument(
         "-o",
         "--out_dir",
         type=str,
         default="outputs/",
-        help="Output folder path.",
+        help="Output folder path (default: output/).",
     )
     parser.add_argument(
         "-f",
         "--out_file",
         type=str,
         default="Inventory",
-        help="Output file name (for serial number operation).",
+        help="Base output file name for inventory Excel export (default: Inventory).",
     )
     parser.add_argument(
         "--stats",
