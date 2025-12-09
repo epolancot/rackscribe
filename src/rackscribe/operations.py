@@ -1,6 +1,7 @@
 import logging
 import time
 from collections.abc import Mapping
+from pathlib import Path
 from typing import Any
 
 from .commands import get_hostname, send_cmd
@@ -18,6 +19,7 @@ log = logging.getLogger("rackscribe")
 
 def gather_running_configs(
     ip_list: list[str],
+    out_dir: Path,
     show_stats: bool = False,
 ) -> None:
     """Connect to each device and save running configurations."""
@@ -44,9 +46,12 @@ def gather_running_configs(
             output = send_cmd(device, "show running-config")
             final_output = remove_config_preamble(output)
 
-            create_config_file(f"{device_number}. {hostname}", final_output)
-            success_count += 1
+            if create_config_file(f"{device_number}. {hostname}", out_dir, final_output):
+                success_count += 1
+            else:
+                failure_count += 1
         except Exception as exc:  # noqa: BLE001
+            failure_count += 1
             log.warning(
                 f"No configuration saved for IP address {ip}. See rackscribe.log for details."
             )
@@ -74,7 +79,7 @@ def gather_running_configs(
 def gather_serial_numbers(
     ip_list: list[str],
     out_file: str,
-    out_dir: str,
+    out_dir: Path,
     show_stats: bool = False,
 ) -> None:
     """Connect to each device and collect serial numbers into an inventory table."""
@@ -109,21 +114,24 @@ def gather_serial_numbers(
             success_count += 1
 
         except Exception as exc:  # noqa: BLE001
+            failure_count += 1
             log.warning(f"No serial numbers saved for {ip}. See rackscribe.log for details.")
             log.debug(
                 f"Exception while collecting inventory for IP address {ip}. Details: {exc}",
                 exc_info=True,
             )
 
-    create_inventory_file(out_file, out_dir, inventory_table)
+    write_ok = create_inventory_file(out_file, out_dir, inventory_table)
 
     elapsed = time.perf_counter() - start
 
     if show_stats:
+        status = "Completed successfully" if write_ok else "Completed with output errors"
         total = success_count + failure_count
         rate = success_count / elapsed if elapsed > 0 and total > 0 else 0.0
         log.info(
             f"[STATS] Gather inventory operation completed in {elapsed:2f} seconds | "
+            f"{status} | "
             f"Devices: {total} - Success: {success_count} - Failed: {failure_count} | "
             f"Rate: {rate:.2f} seconds per device."
         )

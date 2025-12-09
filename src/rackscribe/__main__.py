@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from .inventory import load_inventory
 from .logging_setup import setup_logging
 from .operations import gather_running_configs, gather_serial_numbers
+from .sanitize import validate_output_path
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -48,7 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
         "-o",
         "--out_dir",
         type=str,
-        default="output/",
+        default="outputs/",
         help="Output folder path.",
     )
     parser.add_argument(
@@ -83,6 +84,12 @@ def main() -> None:
     setup_logging(level=logging_levels[args.log_level])
     log = logging.getLogger("rackscribe")
 
+    try:
+        out_dir = validate_output_path(args.out_dir)
+    except ValueError as exc:
+        log.error(str(exc))
+        return
+
     ip_list = load_inventory(args.inventory)
 
     if not ip_list:
@@ -92,12 +99,12 @@ def main() -> None:
     log.info(f"Loaded {len(ip_list)} device(s).")
 
     if args.running_config:
-        gather_running_configs(ip_list, show_stats=args.stats)
+        gather_running_configs(ip_list, out_dir=out_dir, show_stats=args.stats)
     elif args.serial_numbers:
         gather_serial_numbers(
             ip_list=ip_list,
             out_file=args.out_file,
-            out_dir=args.out_dir,
+            out_dir=out_dir,
             show_stats=args.stats,
         )
     else:

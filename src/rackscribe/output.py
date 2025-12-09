@@ -1,6 +1,7 @@
 import logging
 import re
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 from openpyxl import load_workbook
@@ -43,13 +44,15 @@ def remove_config_preamble(config: str) -> str:
     return clean_config.lstrip("\n")
 
 
-def create_config_file(hostname: str, show_run_output: str) -> None:
+def create_config_file(hostname: str, out_dir: Path, show_run_output: str) -> bool:
     """Write running configuration to a per-host file."""
-    log.info(f"Creating configuration file '{hostname}'.")
-    path = f"output/configurations/{hostname}.cfg"
+    path = out_dir / f"{hostname}.cfg"
+    log.info(f"Creating configuration file '{hostname}'")
 
     try:
-        with open(path, "w") as f:
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        with path.open("w", encoding="utf-8") as f:
             f.write(show_run_output)
     except OSError as exc:
         log.error(
@@ -58,8 +61,10 @@ def create_config_file(hostname: str, show_run_output: str) -> None:
         log.debug(
             f"Failed to write configuration file for {hostname} at '{path}': {exc}", exc_info=True
         )
+        return False
 
-    log.info(f"File created for {hostname} at '{path}'.")
+    log.info(f"File created for {hostname} at '{path}'")
+    return True
 
 
 def process_inventory_output(hostname: str, show_inventory_output: str) -> list[list[str]]:
@@ -114,29 +119,33 @@ def format_inventory_worksheet(excel_path: str) -> None:
     wb.save(excel_path)
 
 
-def create_inventory_file(file_name: str, file_path: str, inventory: list[list[str]]) -> None:
+def create_inventory_file(file_name: str, out_dir: Path, inventory: list[list[str]]) -> bool:
     """Write the collected inventory to a timestamped Excel file."""
     now = datetime.now()
     timestamp_str = now.strftime("%Y%m%d-%H%M%S")
 
     base_name = f"{file_name}_{timestamp_str}"
-    full_path = f"{file_path}inventory/{base_name}.xlsx"
+    full_path = out_dir / f"{base_name}.xlsx"
 
     if not inventory:
         log.warning(f"No inventory data to write. Skipping Excel file creation {full_path}.")
-        return
+        return False
 
     TABLE_COLUMNS = ["Hostname", "Name", "Description", "Serial Number"]
 
     try:
+        full_path.parent.mkdir(parents=True, exist_ok=True)
+
         df = pd.DataFrame(inventory, columns=TABLE_COLUMNS)
-        df.to_excel(f"{full_path}", index=False)
+        df.to_excel(full_path, index=False)
+
         # Apply formatting AFTER creation
-        format_inventory_worksheet(full_path)
+        format_inventory_worksheet(str(full_path))
     except (OSError, ValueError) as exc:
         log.error(
             f"Failed to write inventory Excel file at '{full_path}'. See rackscribe.log for details."
         )
         log.debug(f"Failed to write inventory Excel file at {full_path}: {exc}", exc_info=True)
-        return
-    log.info(f"Inventory Excel file succesfully created at {full_path}")
+        return False
+    log.info(f"Inventory Excel file successfully created at {full_path}")
+    return True
