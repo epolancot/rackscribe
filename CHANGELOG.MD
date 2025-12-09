@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is inspired by [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
+## [2.0.1] - 2025-12-09
+
+### Fixed
+
+- Fixed output directory handling when `--out-dir` points to non-existent folders.
+- Output folders are now created automatically for:
+  - Running configuration exports
+  - Inventory Excel exports
+- Improved Windows compatibility for output paths (e.g., handling invalid root paths like `/output`).
+- Operation statistics now correctly reflect:
+  - Invalid IP failures
+  - Connection/command exceptions
+  - File write failures
+- Improved user-facing error messages for unwritable or invalid output paths.
+
 
 ## [2.0.0] - 2025-12-08
 
