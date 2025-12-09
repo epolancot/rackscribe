@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 from importlib.metadata import version
 from pathlib import Path
 
@@ -111,6 +112,23 @@ def main() -> None:
             f"No .env file found at '{env_path}'. "
             "Environment variables may be missing. "
             "You can generate a sample .env with 'rackscribe --auto-setup'."
+        )
+        return
+
+    # Check .env variables
+    required_vars = [
+        "DEVICE_TYPE",
+        "DEVICE_USERNAME",
+        "DEVICE_PASSWORD",
+    ]
+
+    missing = [var for var in required_vars if not os.getenv(var)]
+
+    if missing:
+        log.error(
+            "Missing required environment variables: "
+            f"{', '.join(missing)}.\n"
+            "Update your .env file or export them in your environment."
         )
         return
 
