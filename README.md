@@ -1,6 +1,6 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/Rackscribe_banner3_dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="assets/Rackscribe_banner3_light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/Rackscribe_banner_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/Rackscribe_banner_light.png">
   <img alt="RackScribe — Get configs & serials" src="assets/banner-light.svg" width="100%">
 </picture>
 
