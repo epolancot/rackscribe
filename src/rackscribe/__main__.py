@@ -1,9 +1,12 @@
 import argparse
 import logging
+import os
 from importlib.metadata import version
+from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .auto_setup import auto_setup
 from .inventory import load_inventory
 from .logging_setup import setup_logging
 from .operations import gather_running_configs, gather_serial_numbers
@@ -13,7 +16,7 @@ from .sanitize import validate_output_path
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="rackscribe",
-        description="Gather running configurations and serial numbers.",
+        description="Collect running configurations and serial numbers from network devices and generate inventory reports.",
     )
 
     group = parser.add_mutually_exclusive_group()
@@ -29,35 +32,40 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Collect serial numbers.",
     )
+    group.add_argument(
+        "--auto-setup",
+        action="store_true",
+        help="Create a sample inventory file and .env template (does not overwrite existing files).",
+    )
 
     parser.add_argument(
         "-l",
-        "--log_level",
+        "--log-level",
         type=int,
         default=3,
         choices=range(5),
-        help="Logging level: 0-Critical, 1-Error, 2-Warning, 3-Info, 4-Debug",
+        help="Logging level: 0-Critical, 1-Error, 2-Warning, 3-Info (default), 4-Debug",
     )
     parser.add_argument(
         "-i",
         "--inventory",
         type=str,
-        default="inventory/lab.yaml",
-        help="Inventory yaml file path.",
+        default="inventory/devices.yaml",
+        help="Inventory YAML file path (default: inventory/devices.yaml).",
     )
     parser.add_argument(
         "-o",
-        "--out_dir",
+        "--out-dir",
         type=str,
         default="outputs/",
-        help="Output folder path.",
+        help="Output folder path (default: output/).",
     )
     parser.add_argument(
         "-f",
-        "--out_file",
+        "--out-file",
         type=str,
         default="Inventory",
-        help="Output file name (for serial number operation).",
+        help="Base output file name for inventory Excel export (default: Inventory).",
     )
     parser.add_argument(
         "--stats",
@@ -83,6 +91,46 @@ def main() -> None:
     logging_levels = ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]
     setup_logging(level=logging_levels[args.log_level])
     log = logging.getLogger("rackscribe")
+
+    # Auto-setup mode ----
+    if getattr(args, "auto_setup", False):
+        log.info("Starting RackScribe auto-setup operation.")
+        success = auto_setup()
+
+        if success:
+            log.info("Review inventory file and .env before running operations.")
+        else:
+            log.error("Auto-setup encountered errors. Check rackscribe.log for details.")
+        return
+
+    # Normal operations ----
+
+    # Check .env exists
+    env_path = Path(".env")
+    if not env_path.exists():
+        log.warning(
+            f"No .env file found at '{env_path}'. "
+            "Environment variables may be missing. "
+            "You can generate a sample .env with 'rackscribe --auto-setup'."
+        )
+        return
+
+    # Check .env variables
+    required_vars = [
+        "DEVICE_TYPE",
+        "DEVICE_USERNAME",
+        "DEVICE_PASSWORD",
+    ]
+
+    missing = [var for var in required_vars if not os.getenv(var)]
+
+    if missing:
+        log.error(
+            "Missing required environment variables: "
+            f"{', '.join(missing)}.\n"
+            "Update your .env file or export them in your environment."
+        )
+        return
 
     try:
         out_dir = validate_output_path(args.out_dir)

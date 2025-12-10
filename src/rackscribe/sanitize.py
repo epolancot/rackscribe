@@ -22,7 +22,7 @@ def check_valid_chars(filepath: str) -> bool:
 
 
 def validate_output_path(out_dir: str) -> Path:
-    """ "
+    """
     Validate and normalize the output directory.
     Returns a Path object if valid, raises ValueError if not.
     """
