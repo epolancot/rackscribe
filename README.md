@@ -225,6 +225,7 @@ rackscribe/
 │  └─ rackscribe/          # installable Python package
 │     ├─ __init__.py
 │     ├─ __main__.py       # CLI entrypoint
+│     ├─ auto_setup.py
 │     ├─ commands.py
 │     ├─ connection.py
 │     ├─ inventory.py
