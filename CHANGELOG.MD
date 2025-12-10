@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is inspired by [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
-## [2.1.0] - 2025-12-09
+## [2.1.0] - 2025-12-10
 
 ### Added
 - New `--auto-setup` CLI flag to bootstrap project structure.
