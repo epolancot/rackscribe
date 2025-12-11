@@ -1,21 +1,20 @@
 # --- Rackscribe artifacts ---
-# Default output locations
+
+# auto-setup
+# Default inventory files
+inventory
+
+# Default output location
 outputs/
-configs/
-reports/
 
 # Logs
 logs/
 *.log
 
-# Local inventories
-inventory/*.yaml
-!examples/devices.yml
-
-# Local outputs
-output/configurations/*.*
-output/inventory/*.*
-
+# Legacy
+configs/
+configurations/
+reports/
 # ----------------------------------
 
 
